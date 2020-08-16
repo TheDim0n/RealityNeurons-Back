@@ -90,9 +90,19 @@ def squareImage(image):
 
 def saveImage(imageURL, path, name):
     response = requests.get(imageURL)
+<<<<<<< Updated upstream
     image = Image.open(BytesIO(response.content)).convert('RGB')
     image = squareImage(resizeKeepAspect(image, 224))
     image.save(os.path.join(path, name))
+=======
+    try:
+        image = Image.open(BytesIO(response.content)).convert('RGB')
+    except:
+        pass
+    else:
+        image = squareImage(resizeKeepAspect(image, 224))
+        image.save(os.path.join(path, name))
+>>>>>>> Stashed changes
 
 
 def saveImages(imageURLs, path):

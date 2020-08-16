@@ -1,5 +1,9 @@
 from .yandex_parser import yandex_parser
 from app import app
+<<<<<<< Updated upstream
+=======
+from . import api
+>>>>>>> Stashed changes
 import sys
 from flask import Flask, flash, request, redirect, url_for, session, jsonify, render_template, make_response
 import uuid
@@ -61,7 +65,35 @@ def index():
     if request.method == "POST":
         req = request.get_json(force=True)
         if req['type'] == "parse_data_yandex":
+<<<<<<< Updated upstream
             res = parse_data_yandex(req)
+=======
+            print('req = ', req)
+            search_request = req['search_request']
+            folder = 'RealityNeurons/' + search_request
+            urls = yandex_parser(search_request)
+            success_add = 0
+            for url in urls:
+                try:
+                    if req['session_id'] !="":
+                        print(req['session_id'])
+                        folder = "RealityNeurons/" + str(req['session_id'])
+                        print(folder)
+                        img = scale_image(url)
+                        buf = BytesIO()
+                        img.save(buf, format='JPEG')
+                        byte_im = buf.getvalue()
+                        print(success_add)
+                        cloudinary.uploader.upload(byte_im, folder=folder, public_id = str(success_add))
+                        success_add += 1
+                except:
+                    print('something wrong')
+            urls = []
+            for i in range(success_add):
+                urls.append(str(i)+".jpg")
+            arr = urls.copy()
+            res = jsonify({ "status": 200, "image_ids": urls })
+>>>>>>> Stashed changes
             return make_response(res)
             
         elif req['type'] == "upload_data":
@@ -83,7 +115,10 @@ def index():
             arr.remove(req['image_id'])
 
         elif req['type'] == "session_begin":
+<<<<<<< Updated upstream
             arr = []
+=======
+>>>>>>> Stashed changes
             session["id"] = uuid.uuid4()
             res = make_response(jsonify({ "status": 200, "session_id": session["id"]}))
             return res
@@ -93,12 +128,21 @@ def index():
             class_name = req['class_name']
             session_id = req['session_id']
             print(class_name, session_id)
+<<<<<<< Updated upstream
+=======
+
+            api.load_data_from_urls(arr, class_name)
+
+            api.train_model(class_name)
+            
+>>>>>>> Stashed changes
             return make_response()
         #upload_result = upload(file, use_filename='true',
                                 # folder='RealityNeurons/')
         #cloudinary_url(upload_result['public_id'], format='jpg')
         return ''
     return ''
+<<<<<<< Updated upstream
 
 def parse_data_yandex(req):
     global arr
@@ -126,3 +170,5 @@ def parse_data_yandex(req):
     arr = urls.copy()
     res = jsonify({ "status": 200, "image_ids": urls })
     return res
+=======
+>>>>>>> Stashed changes
